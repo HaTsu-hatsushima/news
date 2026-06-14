@@ -1,0 +1,159 @@
+﻿<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#030b1f" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="News Lite" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="icons/icon-192.png" />
+  <link rel="stylesheet" href="style.css" />
+  <title>News Lite</title>
+</head>
+<body>
+  <header class="app-header">
+    <div>
+      <p class="app-kicker">ANIME / MOVIE / TECH</p>
+      <h1>Suguru Interest News</h1>
+      <p id="currentTagLabel" class="app-sub">声優中心で、映画・アニメ・テック系もタグで横断できる</p>
+    </div>
+    <div class="header-actions">
+      <button id="savedOnlyBtn" type="button" class="ghost-btn">保存のみ: OFF</button>
+      <button id="refreshBtn" aria-label="ニュースを更新">更新</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="stats-grid" aria-label="概要">
+      <article class="stat-card">
+        <p class="stat-label">TRACKED</p>
+        <p id="trackedCount" class="stat-value">0</p>
+        <p class="stat-sub">追跡中の声優</p>
+      </article>
+      <article class="stat-card">
+        <p class="stat-label">COLLECTED</p>
+        <p id="collectedCount" class="stat-value">0</p>
+        <p class="stat-sub">自動収集ニュース</p>
+      </article>
+      <article class="stat-card">
+        <p class="stat-label">VISIBLE</p>
+        <p id="visibleCount" class="stat-value">0</p>
+        <p class="stat-sub">現在の表示件数</p>
+      </article>
+      <article class="stat-card">
+        <p class="stat-label">SAVED</p>
+        <p id="savedCount" class="stat-value">0</p>
+        <p class="stat-sub">保存済み記事</p>
+      </article>
+    </section>
+
+    <section class="dashboard-grid">
+      <aside class="sidebar" aria-label="絞り込み">
+        <section class="panel" aria-label="タグ">
+          <h2 class="section-title">タグ</h2>
+
+          <p class="group-title">Main</p>
+          <div id="mainTagChips" class="chips chips-column" aria-label="メインタグ"></div>
+
+          <p class="group-title section-gap">Category</p>
+          <div id="categoryTagChips" class="chips chips-column" aria-label="カテゴリタグ"></div>
+
+          <p class="group-title section-gap">Filter</p>
+          <div id="filterTagChips" class="chips chips-column" aria-label="フィルタータグ"></div>
+        </section>
+
+        <section id="actorPanel" class="panel" aria-label="お気に入り声優設定">
+          <h2 class="section-title">お気に入り声優</h2>
+          <div class="actor-form-row">
+            <input id="actorInput" type="text" placeholder="例: 花澤香菜" maxlength="30" aria-label="声優名を入力" />
+            <button id="addActorBtn" type="button">追加</button>
+          </div>
+          <p class="help-text">タップで切替。右上の × で削除できます。</p>
+          <div id="actorChips" class="chips" aria-label="お気に入り声優一覧"></div>
+        </section>
+
+        <section class="panel" aria-label="自動収集パネル">
+          <h2 class="section-title">自動収集AI 管理</h2>
+
+          <div class="collector-grid">
+            <div class="mini-box">
+              <p class="mini-label">自動収集</p>
+              <p id="collectorEnabledText" class="mini-value">ON</p>
+            </div>
+            <div class="mini-box">
+              <p class="mini-label">状態</p>
+              <p id="collectorStatusText" class="mini-value">待機中</p>
+            </div>
+            <div class="mini-box">
+              <p class="mini-label">最終更新</p>
+              <p id="collectorLastText" class="mini-value">未実行</p>
+            </div>
+            <div class="mini-box">
+              <p class="mini-label">収集件数</p>
+              <p id="collectorCountText" class="mini-value">0件</p>
+            </div>
+          </div>
+
+          <p class="group-title section-gap">収集元</p>
+          <div id="sourceFeedChips" class="chips" aria-label="収集元"></div>
+
+          <div class="collector-actions">
+            <button id="toggleAutoCollectBtn" type="button" class="ghost-btn">停止</button>
+            <button id="runMockCollectBtn" type="button" class="ghost-btn">今すぐ収集テスト</button>
+          </div>
+
+          <p class="group-title section-gap">収集ログ</p>
+          <ul id="collectionLogs" class="log-list" aria-label="収集ログ"></ul>
+        </section>
+      </aside>
+
+      <section class="timeline" aria-label="ニュースタイムライン">
+        <div class="timeline-head">
+          <div>
+            <p class="timeline-kicker">TIMELINE</p>
+            <h2>新着タイムライン</h2>
+          </div>
+          <input id="searchInput" class="search-input timeline-search" type="search" placeholder="声優名・作品名・タグで検索" aria-label="ニュース検索" />
+        </div>
+
+        <p id="status" class="status" role="status" aria-live="polite">ニュースを取得中...</p>
+        <ul id="newsList" class="news-list" aria-label="ニュース一覧"></ul>
+      </section>
+    </section>
+  </main>
+
+  <dialog id="newsDialog" class="news-dialog" aria-label="ニュース詳細">
+    <article>
+      <h2 id="dialogTitle"></h2>
+      <p id="dialogMeta" class="meta"></p>
+      <p id="dialogDesc" class="desc"></p>
+      <div class="dialog-actions">
+        <a id="dialogLink" href="#" target="_blank" rel="noopener noreferrer">元記事を開く</a>
+        <button id="dialogSaveBtn" type="button" class="ghost-btn">保存</button>
+      </div>
+      <button id="closeDialogBtn" class="close-btn">閉じる</button>
+    </article>
+  </dialog>
+
+  <script>
+    (() => {
+      const isLocalPreview = ["127.0.0.1", "localhost"].includes(location.hostname);
+      const clearKey = "newsPreviewCacheClearedV1";
+      if (!isLocalPreview || sessionStorage.getItem(clearKey)) return;
+
+      sessionStorage.setItem(clearKey, "1");
+      const tasks = [];
+      if ("serviceWorker" in navigator) {
+        tasks.push(navigator.serviceWorker.getRegistrations().then((regs) => Promise.all(regs.map((reg) => reg.unregister()))));
+      }
+      if ("caches" in window) {
+        tasks.push(caches.keys().then((keys) => Promise.all(keys.map((key) => caches.delete(key)))));
+      }
+      Promise.all(tasks).then(() => location.reload()).catch(() => {});
+    })();
+  </script>
+  <script src="script.js?v=20260613d" defer></script>
+</body>
+</html>
