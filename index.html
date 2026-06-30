@@ -140,10 +140,16 @@
   <script>
     (() => {
       const isLocalPreview = ["127.0.0.1", "localhost"].includes(location.hostname);
-      const clearKey = "newsPreviewCacheClearedV1";
-      if (!isLocalPreview || sessionStorage.getItem(clearKey)) return;
+      const clearKey = "newsPreviewCacheClearedV20260630a";
+      if (!isLocalPreview) return;
 
-      sessionStorage.setItem(clearKey, "1");
+      try {
+        if (localStorage.getItem(clearKey)) return;
+        localStorage.setItem(clearKey, "1");
+      } catch {
+        return;
+      }
+
       const tasks = [];
       if ("serviceWorker" in navigator) {
         tasks.push(navigator.serviceWorker.getRegistrations().then((regs) => Promise.all(regs.map((reg) => reg.unregister()))));
@@ -154,6 +160,6 @@
       Promise.all(tasks).then(() => location.reload()).catch(() => {});
     })();
   </script>
-  <script src="script.js?v=20260613d" defer></script>
+  <script src="script.js?v=20260630i" defer></script>
 </body>
 </html>

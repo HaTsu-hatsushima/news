@@ -1,4 +1,4 @@
-﻿const CACHE_NAME = "news-lite-v39";
+const CACHE_NAME = "news-lite-v87";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -38,7 +38,7 @@ self.addEventListener("fetch", (event) => {
     url.pathname.endsWith(".css") ||
     url.pathname.endsWith(".webmanifest");
 
-  // 画面とJS/CSSは常に新しめを優先（更新反映を早くする）
+  // Prefer fresh HTML/JS/CSS so local updates appear quickly.
   if (isCoreAsset) {
     event.respondWith(
       fetch(request)
