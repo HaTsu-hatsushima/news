@@ -751,6 +751,15 @@ const FOODTECH_SOURCE_CONFIG = {
       "site:prtimes.jp 代替肉 OR 培養肉 OR 植物工場 OR 昆虫食 OR 農業テック OR 植物ワクチン",
       "site:prtimes.jp 新素材 OR 発酵由来 OR 精密発酵 OR 分子農業"
     ]
+  },
+  agriTech: {
+    source: "AgriTech",
+    sourceMatches: [],
+    timeoutMs: 8000,
+    queries: [
+      "\"スマート農業\" OR \"農業AI\" OR \"農業dx\" OR \"agritech\" OR \"smart agriculture\"",
+      "\"植物工場\" OR \"vertical farming\" OR \"indoor farming\" OR \"smart greenhouse\" OR \"栽培管理\""
+    ]
   }
 };
 
